@@ -1,5 +1,4 @@
-﻿using S10270149G__PRG2Assignment;
-using System;
+﻿using System;
 
 class Program
 {
