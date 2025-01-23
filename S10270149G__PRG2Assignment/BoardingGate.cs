@@ -18,19 +18,6 @@ public class BoardingGate
         AssignedFlight = null; // Initially no flight assigned
     }
 
-    // Calculate fees for the gate based on assigned flight special request
-    public double CalculateFees()
-    {
-        double baseFee = 300; // Default base fee for all gates
-        if (AssignedFlight != null) // If a flight is assigned, calculate additional fees
-        {
-            if (AssignedFlight.SpecialRequest == "DDJB") baseFee += 300;
-            if (AssignedFlight.SpecialRequest == "CFFT") baseFee += 150;
-            if (AssignedFlight.SpecialRequest == "LWTT") baseFee += 500;
-        }
-        return baseFee;
-    }
-
     // Override ToString() to return details of the gate
     public override string ToString()
     {
