@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace S10270149G__PRG2Assignment
+﻿public class Airline
 {
-    public class Airline
-    {
-        public string Code { get; private set; }
-        public string Name { get; private set; }
+    public string Code { get; private set; } // Two-letter code for the airline
+    public string Name { get; private set; } // Full name of the airline
 
-        public Airline(string code, string name)
-        {
-            Code = code;
-            Name = name;
-        }
+    // Constructor to initialize airline attributes
+    public Airline(string code, string name)
+    {
+        Code = code; // Assign airline code
+        Name = name; // Assign airline name
     }
 
+    // Converts airline information to a string
+    public override string ToString()
+    {
+        return $"Airline: {Code}, Name: {Name}"; // Return formatted airline details
+    }
 }
