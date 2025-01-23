@@ -1,24 +1,23 @@
-﻿public class Flight
+﻿abstract class Flight
 {
-    public string FlightNumber { get; private set; }  // Unique identifier for the flight
-    public string AirlineCode { get; private set; }  // Airline's two-letter code (e.g., "SQ")
-    public string Origin { get; private set; }  // Origin airport of the flight
-    public string Destination { get; private set; }  // Destination airport of the flight
-    public string ExpectedDeparture { get; private set; }  // Scheduled departure time
-    public string SpecialRequest { get; private set; }  // Any special boarding gate requests
-    public string BoardingGateName { get; set; } = null!;  // The name of the assigned gate
+    public string FlightNumber { get; set; }  // Unique identifier for the flight
+    public string Origin { get; set; }  // Origin airport of the flight
+    public string Destination { get; set; }  // Destination airport of the flight
+    public DateTime ExpectedTime { get; set; }  // Scheduled departure time
     public string Status { get; set; }  // Current flight status (e.g., "On Time", "Delayed")
 
     // Constructor to initialize the flight with its attributes
-    public Flight(string flightNumber, string airlineCode, string origin, string destination, string expectedDeparture, string specialRequest)
+    public Flight(string flightNumber, string origin, string destination, DateTime expectedTime)
     {
         FlightNumber = flightNumber;  // Assign flight number
-        AirlineCode = airlineCode;  // Assign airline code
         Origin = origin;  // Assign origin airport
         Destination = destination;  // Assign destination airport
-        ExpectedDeparture = expectedDeparture;  // Assign departure time
-        SpecialRequest = specialRequest;  // Assign special request code
-        BoardingGateName = null;  // No gate assigned initially
-        Status = "On Time";  // Default status set to "On Time"
+        ExpectedTime = expectedTime;  // Assign departure time
+        Status = "Scheduled";  // Default status set to "Scheduled"
+    }
+
+    public override string ToString()
+    {
+        return "Flight number:" + FlightNumber + "\tOrigin:" + Origin + "\tDestination:" + Destination + "\tExpected time:" + ExpectedTime + "\t" + Status;
     }
 }

@@ -2,30 +2,30 @@
 using System;
 using System.Collections.Generic;
 
-public class Terminal
+class Terminal
 {
-    private string terminalName;  // Stores the name of the terminal
-    private Dictionary<string, Airline> airlines;  // Stores airlines with their codes
-    private Dictionary<string, Flight> flights;  // Stores flights with their flight numbers
-    private Dictionary<string, BoardingGate> boardingGates;  // Stores boarding gates with gate names
-    private Dictionary<string, double> gateFees;  // Stores gate fees by airline code
+    public string TerminalName { get; set; }  // Stores the name of the terminal
+    public Dictionary<string, Airline> Airlines { get; set; }  // Stores airlines with their codes
+    public Dictionary<string, Flight> Flights { get; set; }  // Stores flights with their flight numbers
+    public Dictionary<string, BoardingGate> BoardingGates { get; set; }  // Stores boarding gates with gate names
+    public Dictionary<string, double> GateFees { get; set; }  // Stores gate fees by airline code
 
     // Constructor to initialize the terminal with a name
     public Terminal(string name)
     {
-        terminalName = name;
-        airlines = new Dictionary<string, Airline>();  // Initialize airlines dictionary
-        flights = new Dictionary<string, Flight>();  // Initialize flights dictionary
-        boardingGates = new Dictionary<string, BoardingGate>();  // Initialize gates dictionary
-        gateFees = new Dictionary<string, double>();  // Initialize gate fees dictionary
+        TerminalName = name;
+        Airlines = new Dictionary<string, Airline>();  // Initialize airlines dictionary
+        Flights = new Dictionary<string, Flight>();  // Initialize flights dictionary
+        BoardingGates = new Dictionary<string, BoardingGate>();  // Initialize gates dictionary
+        GateFees = new Dictionary<string, double>();  // Initialize gate fees dictionary
     }
 
     // Adds an airline to the terminal
     public bool AddAirline(Airline airline)
     {
-        if (!airlines.ContainsKey(airline.Code))  // Check if airline does not already exist
+        if (!Airlines.ContainsKey(airline.Code))  // Check if airline does not already exist
         {
-            airlines.Add(airline.Code, airline);  // Add airline to dictionary
+            Airlines.Add(airline.Code, airline);  // Add airline to dictionary
             return true;
         }
         return false;
@@ -34,9 +34,9 @@ public class Terminal
     // Adds a boarding gate to the terminal
     public bool AddBoardingGate(BoardingGate gate)
     {
-        if (!boardingGates.ContainsKey(gate.GateName))  // Check if gate is not already added
+        if (!BoardingGates.ContainsKey(gate.GateName))  // Check if gate is not already added
         {
-            boardingGates.Add(gate.GateName, gate);  // Add gate to dictionary
+            BoardingGates.Add(gate.GateName, gate);  // Add gate to dictionary
             return true;
         }
         return false;
@@ -45,9 +45,9 @@ public class Terminal
     // Adds a flight to the terminal
     public bool AddFlight(Flight flight)
     {
-        if (!flights.ContainsKey(flight.FlightNumber))  // Check if flight is not already added
+        if (!Flights.ContainsKey(flight.FlightNumber))  // Check if flight is not already added
         {
-            flights.Add(flight.FlightNumber, flight);  // Add flight to dictionary
+            Flights.Add(flight.FlightNumber, flight);  // Add flight to dictionary
             return true;
         }
         return false;
@@ -56,18 +56,15 @@ public class Terminal
     // Retrieves the airline associated with a given flight
     public Airline GetAirlineFromFlight(Flight flight)
     {
-        if (airlines.ContainsKey(flight.AirlineCode))  // Check if airline exists in dictionary
-        {
-            return airlines[flight.AirlineCode];  // Return the corresponding airline
-        }
-        return null;  // Return null if airline not found
+        string airlineCode = flight.FlightNumber.Split(' ')[0];  // Retrieve code from FlightNumber
+        return Airlines[airlineCode];  // Returns Airline object using code
     }
 
     // Lists all boarding gates with their details
     public void ListAllBoardingGates()
     {
         Console.WriteLine("\n--- List of Boarding Gates ---\n");
-        foreach (var gate in boardingGates.Values)  // Loop through each gate in the dictionary
+        foreach (BoardingGate gate in BoardingGates.Values)  // Loop through each gate in the dictionary
         {
             Console.WriteLine(gate.ToString());  // Print gate details
         }
@@ -79,25 +76,25 @@ public class Terminal
         Console.Write("Enter Flight Number: ");
         string flightNumber = Console.ReadLine();  // Read flight number from user
 
-        if (!flights.ContainsKey(flightNumber))  // Check if flight exists
+        if (!Flights.ContainsKey(flightNumber))  // Check if flight exists
         {
             Console.WriteLine("Error: Flight not found.");
             return;
         }
 
-        Flight selectedFlight = flights[flightNumber];  // Retrieve the flight object
+        Flight selectedFlight = Flights[flightNumber];  // Retrieve the flight object
         Console.WriteLine($"Flight found: {selectedFlight}");
 
         Console.Write("Enter Boarding Gate Name: ");
         string gateName = Console.ReadLine();  // Read gate name from user
 
-        if (!boardingGates.ContainsKey(gateName))  // Check if gate exists
+        if (!BoardingGates.ContainsKey(gateName))  // Check if gate exists
         {
             Console.WriteLine("Error: Boarding Gate not found.");
             return;
         }
 
-        BoardingGate gate = boardingGates[gateName];  // Retrieve the boarding gate object
+        BoardingGate gate = BoardingGates[gateName];  // Retrieve the boarding gate object
 
         if (gate.AssignedFlight != null)  // Check if the gate is already occupied
         {
@@ -134,11 +131,11 @@ public class Terminal
     // Prints the airline fees for assigned flights
     public void PrintAirlineFees()
     {
-        foreach (var flight in flights.Values)  // Loop through flights
+        foreach (var flight in Flights.Values)  // Loop through flights
         {
-            if (boardingGates.ContainsKey(flight.BoardingGateName))  // Check if gate exists for the flight
+            if (BoardingGates.ContainsKey(flight.BoardingGateName))  // Check if gate exists for the flight
             {
-                double fee = boardingGates[flight.BoardingGateName].CalculateFees();  // Calculate fees
+                double fee = BoardingGates[flight.BoardingGateName].CalculateFees();  // Calculate fees
                 Console.WriteLine($"Airline: {flight.AirlineCode}, Gate: {flight.BoardingGateName}, Fee: {fee:C}");
             }
         }
@@ -147,6 +144,6 @@ public class Terminal
     // Converts terminal information to a string
     public override string ToString()
     {
-        return $"Terminal: {terminalName}, Airlines: {airlines.Count}, Flights: {flights.Count}, Gates: {boardingGates.Count}";
+        return $"Terminal: {TerminalName}, Airlines: {Airlines.Count}, Flights: {Flights.Count}, Gates: {BoardingGates.Count}";
     }
 }

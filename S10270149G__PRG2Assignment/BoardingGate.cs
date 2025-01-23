@@ -1,12 +1,12 @@
 ﻿using S10270149G__PRG2Assignment;  // Namespace for the assignment
 
-public class BoardingGate
+class BoardingGate
 {
-    public string GateName { get; private set; }  // The name of the gate (e.g., A1, B2)
-    public bool SupportsCFFT { get; private set; }  // Whether the gate supports CFFT requests
-    public bool SupportsDDJB { get; private set; }  // Whether the gate supports DDJB requests
-    public bool SupportsLWTT { get; private set; }  // Whether the gate supports LWTT requests
-    public Flight AssignedFlight { get; set; }  // The flight currently assigned to the gate
+    public string GateName { get; set; }  // The name of the gate (e.g., A1, B2)
+    public bool SupportsCFFT { get; set; }  // Whether the gate supports CFFT requests
+    public bool SupportsDDJB { get; set; }  // Whether the gate supports DDJB requests
+    public bool SupportsLWTT { get; set; }  // Whether the gate supports LWTT requests
+    public Flight? AssignedFlight { get; set; }  // The flight currently assigned to the gate
 
     // Constructor to initialize boarding gate properties
     public BoardingGate(string gateName, bool supportsCFFT, bool supportsDDJB, bool supportsLWTT)
@@ -25,9 +25,9 @@ public class BoardingGate
         if (AssignedFlight != null)  // Check if a flight is assigned
         {
             // Add extra fees based on the flight's special request
-            if (AssignedFlight.SpecialRequest == "DDJB") baseFee += 300;
-            if (AssignedFlight.SpecialRequest == "CFFT") baseFee += 150;
-            if (AssignedFlight.SpecialRequest == "LWTT") baseFee += 500;
+            if (AssignedFlight is DDJBFlight) baseFee += 300;
+            if (AssignedFlight is CFFTFlight) baseFee += 150;
+            if (AssignedFlight is LWTTFlight) baseFee += 500;
         }
         return baseFee;  // Return the calculated fee
     }
