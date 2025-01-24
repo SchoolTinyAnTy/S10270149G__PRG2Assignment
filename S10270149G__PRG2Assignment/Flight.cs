@@ -14,6 +14,7 @@ abstract class Flight
     public string Destination { get; set; }  // Destination airport of the flight
     public DateTime ExpectedTime { get; set; }  // Scheduled departure time
     public string Status { get; set; }  // Current flight status
+    public string BoardingGateName { get; set; }  // Boarding gate assigned to the flight
 
     // Constructor to initialize a flight object
     public Flight(string flightNumber, string origin, string destination, DateTime expectedTime)
@@ -23,11 +24,12 @@ abstract class Flight
         Destination = destination;
         ExpectedTime = expectedTime;
         Status = "Scheduled";
+        BoardingGateName = "Not Assigned";  // Default value for gate name
     }
 
     // Returns flight details as a formatted string
     public override string ToString()
     {
-        return $"Flight {FlightNumber} from {Origin} to {Destination}, Departure: {ExpectedTime}, Status: {Status}";
+        return $"Flight {FlightNumber} from {Origin} to {Destination}, Departure: {ExpectedTime}, Status: {Status}, Gate: {BoardingGateName}";
     }
 }
