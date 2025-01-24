@@ -1,60 +1,56 @@
-﻿using System;
+﻿//==========================================================
+// Student Number : S10270149G
+// Partner Number : S10266900J
+// Student Name   : Orlando Lee Ming Kai
+// Partner Name   : Ewe Yoke Kay 
+//==========================================================
+using System;
+namespace S10270149G__PRG2Assignment;
 
 class Program
 {
     static void Main(string[] args)
     {
-        Terminal terminal = new Terminal("Changi T5");  // Create a new terminal instance
+        Terminal terminal = new Terminal("Changi T5");
 
-        // Add sample boarding gates with special support configurations
-        terminal.AddBoardingGate(new BoardingGate("A1", true, false, true));  // Supports CFFT and LWTT
-        terminal.AddBoardingGate(new BoardingGate("B2", false, true, false));  // Supports DDJB
-        terminal.AddBoardingGate(new BoardingGate("C3", true, true, false));  // Supports CFFT and DDJB
+        // Adding sample boarding gates
+        terminal.AddBoardingGate(new BoardingGate("A1", true, false, true));
+        terminal.AddBoardingGate(new BoardingGate("B2", false, true, false));
 
-        // Add sample airlines to the terminal
-        terminal.AddAirline(new Airline("SQ", "Singapore Airlines"));  // Add Singapore Airlines
-        terminal.AddAirline(new Airline("CX", "Cathay Pacific"));  // Add Cathay Pacific
+        // Adding sample airlines
+        terminal.AddAirline(new Airline("SQ", "Singapore Airlines"));
+        terminal.AddAirline(new Airline("CX", "Cathay Pacific"));
 
-        // Add sample flights to the terminal
-        Flight flight1 = new Flight("SQ693", "SQ", "NRT", "SIN", "10:30 AM", "DDJB");  // Flight requiring DDJB
-        Flight flight2 = new Flight("CX312", "CX", "SIN", "HKD", "1:00 PM", "CFFT");  // Flight requiring CFFT
+        // Adding sample flights using specific subclasses
+        Flight flight1 = new DDJBFlight("SQ693", "SIN", "NRT", DateTime.Parse("10:30 AM"));
+        Flight flight2 = new CFFTFlight("CX312", "SIN", "HKD", DateTime.Parse("1:00 PM"));
 
-        // Add flights to the terminal
         terminal.AddFlight(flight1);
         terminal.AddFlight(flight2);
 
-        // Menu system for interacting with the terminal
         while (true)
         {
-            Console.WriteLine("\n--- Flight Information Display System (FIDS) ---");
             Console.WriteLine("1. List All Boarding Gates");
             Console.WriteLine("2. Assign Boarding Gate to Flight");
             Console.WriteLine("3. Print Airline Fees");
             Console.WriteLine("4. Exit");
-            Console.Write("Choose an option: ");
 
-            string choice = Console.ReadLine();  // Read user input for menu selection
-
+            string choice = Console.ReadLine();
             switch (choice)
             {
                 case "1":
-                    terminal.ListAllBoardingGates();  // Display all boarding gates
+                    terminal.ListAllBoardingGates();
                     break;
-
                 case "2":
-                    terminal.AssignBoardingGateToFlight();  // Assign a gate to a flight
+                    terminal.AssignBoardingGateToFlight();
                     break;
-
                 case "3":
-                    terminal.PrintAirlineFees();  // Print all airline fees
+                    terminal.PrintAirlineFees();
                     break;
-
                 case "4":
-                    Console.WriteLine("Exiting program. Goodbye!");
-                    return;  // Exit the program
-
+                    return;
                 default:
-                    Console.WriteLine("Invalid option. Please try again.");  // Handle invalid input
+                    Console.WriteLine("Invalid option.");
                     break;
             }
         }

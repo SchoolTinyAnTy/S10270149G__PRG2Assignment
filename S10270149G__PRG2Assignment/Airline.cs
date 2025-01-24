@@ -1,42 +1,43 @@
-﻿class Airline
+﻿//==========================================================
+// Student Number : S10270149G
+// Partner Number : S10266900J
+// Student Name   : Orlando Lee Ming Kai
+// Partner Name   : Ewe Yoke Kay 
+//==========================================================
+namespace S10270149G__PRG2Assignment;
+
+// Class representing an airline
+class Airline
 {
-    public string Code { get; set; } // Two-letter code for the airline
-    public string Name { get; set; } // Full name of the airline
+    public string Code { get; set; }  // Two-letter airline code (e.g., "SQ")
+    public string Name { get; set; }  // Full airline name
+    public Dictionary<string, Flight> Flights { get; set; } = new Dictionary<string, Flight>();
 
-    public Dictionary<string, Flight> Flights { get; set; } = new Dictionary<string, Flight>(); // Store Flight objects as value and FlightNumber as key 
-
-    // Constructor to initialize airline attributes
+    // Constructor to initialize an airline object
     public Airline(string code, string name)
     {
-        Code = code; // Assign airline code
-        Name = name; // Assign airline name
+        Code = code;
+        Name = name;
     }
 
-    // Adds a flight to Flights
+    // Add flight to the airline's flight dictionary
     public bool AddFlight(Flight flight)
     {
-        if (Flights.ContainsValue(flight)) // Check if flight exist
-        {
+        if (Flights.ContainsKey(flight.FlightNumber))
             return false;
-        }
-        Flights[flight.FlightNumber] = flight; // Add flight to the dictionary Flights
+        Flights[flight.FlightNumber] = flight;
         return true;
     }
 
-    // Remove a flight from Flights
-    public bool RemoveFlight(Flight flight)
+    // Remove a flight by its flight number
+    public bool RemoveFlight(string flightNumber)
     {
-        if (Flights.ContainsValue(flight)) // Check if flight exist
-        {
-            Flights.Remove(flight.FlightNumber); // Remove flight from the dictionary Flights
-            return true;
-        }
-        return false;
+        return Flights.Remove(flightNumber);
     }
 
-    // Converts airline information to a string
+    // Returns airline details as a formatted string
     public override string ToString()
     {
-        return $"Airline: {Code}, Name: {Name}"; // Return formatted airline details
+        return $"Airline: {Code}, Name: {Name}";
     }
 }

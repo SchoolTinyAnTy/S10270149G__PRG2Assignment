@@ -1,4 +1,10 @@
-﻿using System;
+﻿//==========================================================
+// Student Number : S10270149G
+// Partner Number : S10266900J
+// Student Name   : Orlando Lee Ming Kai
+// Partner Name   : Ewe Yoke Kay 
+//==========================================================
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
