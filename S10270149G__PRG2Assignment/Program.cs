@@ -13,7 +13,6 @@ class Program
 {   
     static void Main(string[] args)
     {
-
         Terminal terminal = new Terminal("Changi T5");
 
         // Adding sample boarding gates
@@ -25,6 +24,8 @@ class Program
         terminal.AddAirline(new Airline("CX", "Cathay Pacific"));
 
         AddFlights(terminal);
+
+        Console.WriteLine($"Loading Flights...\n{terminal.Flights.Count} Flights Loaded!\n");
 
         while (true)
         {
