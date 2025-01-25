@@ -4,13 +4,16 @@
 // Student Name   : Orlando Lee Ming Kai
 // Partner Name   : Ewe Yoke Kay 
 //==========================================================
+using S10270149G__PRG2Assignment;
 using System;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace S10270149G__PRG2Assignment;
 
 class Program
-{
+{   
     static void Main(string[] args)
     {
+
         Terminal terminal = new Terminal("Changi T5");
 
         // Adding sample boarding gates
@@ -21,12 +24,7 @@ class Program
         terminal.AddAirline(new Airline("SQ", "Singapore Airlines"));
         terminal.AddAirline(new Airline("CX", "Cathay Pacific"));
 
-        // Adding sample flights using specific subclasses
-        Flight flight1 = new DDJBFlight("SQ693", "SIN", "NRT", DateTime.Parse("10:30 AM"));
-        Flight flight2 = new CFFTFlight("CX312", "SIN", "HKD", DateTime.Parse("1:00 PM"));
-
-        terminal.AddFlight(flight1);
-        terminal.AddFlight(flight2);
+        AddFlights(terminal);
 
         while (true)
         {
@@ -52,6 +50,43 @@ class Program
                 default:
                     Console.WriteLine("Invalid option.");
                     break;
+            }
+        }
+
+        //method to add flights to dictionary
+        void AddFlights(Terminal terminal)
+        {
+            using (StreamReader sr = new StreamReader("flights.csv"))
+            {
+                string? data = sr.ReadLine();
+                if (data != null)
+                {
+                    string[] heading = data.Split(",");
+                }
+                while ((data = sr.ReadLine()) != null)
+                {
+                    string[] flightList = data.Split(",");
+                    if (flightList[4] == null)
+                    {
+                        Flight flight = new NORMFlight(flightList[0], flightList[1], flightList[2], Convert.ToDateTime(flightList[3]));
+                        terminal.AddFlight(flight);
+                    }
+                    else if (flightList[4] == "CFFT")
+                    {
+                        Flight flight = new CFFTFlight(flightList[0], flightList[1], flightList[2], Convert.ToDateTime(flightList[3]));
+                        terminal.AddFlight(flight);
+                    }
+                    else if (flightList[4] == "DDJB")
+                    {
+                        Flight flight = new DDJBFlight(flightList[0], flightList[1], flightList[2], Convert.ToDateTime(flightList[3]));
+                        terminal.AddFlight(flight);
+                    }
+                    else
+                    {
+                        Flight flight = new LWTTFlight(flightList[0], flightList[1], flightList[2], Convert.ToDateTime(flightList[3]));
+                        terminal.AddFlight(flight);
+                    }
+                }
             }
         }
     }
