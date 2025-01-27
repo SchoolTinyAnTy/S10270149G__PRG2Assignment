@@ -1,0 +1,31 @@
+Flight Number,Origin,Destination,Expected Departure/Arrival,Special Request Code
+SQ 115,Tokyo (NRT),Singapore (SIN),11:45 AM,DDJB
+MH 298,Kuala Lumpur (KUL),Singapore (SIN),12:30 PM,CFFT
+JL 401,Tokyo (NRT),Singapore (SIN),1:10 PM,CFFT
+CX 453,Singapore (SIN),Hong Kong (HKD),2:20 PM,
+QF 672,Singapore (SIN),Sydney (SYD),3:50 PM,DDJB
+TR 123,Bangkok (BKK),Singapore (SIN),10:00 AM,
+EK 870,Dubai (DXB),Singapore (SIN),9:30 PM,DDJB
+BA 450,Singapore (SIN),London (LHR),7:15 PM,LWTT
+SQ 221,Manila (MNL),Singapore (SIN),8:50 AM,DDJB
+MH 652,Singapore (SIN),Jakarta (CGK),12:40 PM, 
+JL 198,Singapore (SIN),Tokyo (NRT),1:30 PM,
+CX 334,Singapore (SIN),Hong Kong (HKD),6:15 PM,CFFT
+QF 821,Singapore (SIN),Melbourne (MEL),9:10 AM,LWTT
+TR 789,Bangkok (BKK),Singapore (SIN),11:20 AM,
+EK 342,Dubai (DXB),Singapore (SIN),8:50 AM,DDJB
+BA 652,London (LHR),Singapore (SIN),10:00 AM,
+SQ 687,Singapore (SIN),Sydney (SYD),2:25 PM,LWTT
+MH 223,Kuala Lumpur (KUL),Singapore (SIN),4:00 PM,
+JL 324,Tokyo (NRT),Singapore (SIN),5:45 PM,CFFT
+CX 918,Singapore (SIN),Hong Kong (HKD),7:30 PM,
+QF 456,Singapore (SIN),Jakarta (CGK),1:20 PM,CFFT
+TR 231,Singapore (SIN),Bangkok (BKK),3:50 PM,
+EK 123,Dubai (DXB),Singapore (SIN),6:45 AM,LWTT
+BA 981,Singapore (SIN),Melbourne (MEL),11:15 AM,CFFT
+SQ 512,Manila (MNL),Singapore (SIN),8:35 AM,CFFT
+MH 781,Singapore (SIN),Sydney (SYD),9:40 PM,CFFT
+JL 900,Tokyo (NRT),Singapore (SIN),10:20 AM,
+CX 329,Singapore (SIN),Hong Kong (HKD),12:50 PM,DDJB
+QF 897,Singapore (SIN),Sydney (SYD),1:40 PM,
+TR 786,Bangkok (BKK),Singapore (SIN),2:55 PM,
