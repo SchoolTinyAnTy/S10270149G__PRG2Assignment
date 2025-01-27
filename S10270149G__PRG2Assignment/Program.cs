@@ -15,6 +15,8 @@ class Program
     {
         Terminal terminal = new Terminal("Changi T5");
 
+        LoadAirlines(terminal);
+        LoadBoardingGates(terminal);
 
         AddFlights(terminal);
 
@@ -58,7 +60,39 @@ class Program
             }
         }
 
-       
+
+
+
+        void LoadAirlines(Terminal terminal)
+        {
+            using (StreamReader sr = new StreamReader("airlines.csv"))
+            {
+                string? s = sr.ReadLine();
+                while ((s = sr.ReadLine()) != null)
+                {
+                    string[] airlineDetails = s.Split(',');
+                    Airline airline = new Airline(airlineDetails[0], airlineDetails[1]);
+
+                    terminal.AddAirline(airline);
+                }
+            }
+        }
+
+        void LoadBoardingGates(Terminal terminal)
+        {
+            using (StreamReader sr = new StreamReader("boardinggates.csv"))
+            {
+                string? s = sr.ReadLine();
+                while ((s = sr.ReadLine()) != null)
+                {
+                    string[] boardingGateDetails = s.Split(',');
+                    BoardingGate boardingGate = new BoardingGate(boardingGateDetails[0], Convert.ToBoolean(boardingGateDetails[1]), Convert.ToBoolean(boardingGateDetails[2]), Convert.ToBoolean(boardingGateDetails[3]));
+
+                    terminal.AddBoardingGate(boardingGate);
+                }
+            }
+        }
+
 
         //method to add flights to dictionary
         void AddFlights(Terminal terminal)
