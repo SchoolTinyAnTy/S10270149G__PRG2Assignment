@@ -9,15 +9,15 @@ namespace S10270149G__PRG2Assignment;
 // Class representing an airline
 class Airline
 {
-    public string Code { get; set; }  // Two-letter airline code (e.g., "SQ")
     public string Name { get; set; }  // Full airline name
+    public string Code { get; set; }  // Two-letter airline code (e.g., "SQ")
     public Dictionary<string, Flight> Flights { get; set; } = new Dictionary<string, Flight>();
 
     // Constructor to initialize an airline object
-    public Airline(string code, string name)
+    public Airline(string name, string code)
     {
-        Code = code;
         Name = name;
+        Code = code;
     }
 
     // Add flight to the airline's flight dictionary
