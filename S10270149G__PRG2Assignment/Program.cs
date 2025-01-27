@@ -13,31 +13,36 @@ class Program
 {   
     static void Main(string[] args)
     {
-
         Terminal terminal = new Terminal("Changi T5");
 
-        // Adding sample boarding gates
-        terminal.AddBoardingGate(new BoardingGate("A1", true, false, true));
-        terminal.AddBoardingGate(new BoardingGate("B2", false, true, false));
-
-        // Adding sample airlines
-        terminal.AddAirline(new Airline("SQ", "Singapore Airlines"));
-        terminal.AddAirline(new Airline("CX", "Cathay Pacific"));
 
         AddFlights(terminal);
 
+        Console.WriteLine($"Loading Airlines...\n{terminal.Airlines.Count} Airlines Loaded!");
+        Console.WriteLine($"Loading Boarding Gates...\n{terminal.BoardingGates.Count} Boarding Gates Loaded!");
+        Console.WriteLine($"Loading Flights...\n{terminal.Flights.Count} Flights Loaded!\n");
+
         while (true)
         {
-            Console.WriteLine("1. List All Boarding Gates");
-            Console.WriteLine("2. Assign Boarding Gate to Flight");
-            Console.WriteLine("3. Print Airline Fees");
-            Console.WriteLine("4. Exit");
+            Console.WriteLine("=============================================");
+            Console.WriteLine("Welcome to Changi Airport Terminal 5");
+            Console.WriteLine("=============================================");
 
-            string choice = Console.ReadLine();
+            Console.WriteLine("1. List All Flights");
+            Console.WriteLine("2. List Boarding Gates");
+            Console.WriteLine("3. Assign  a Boarding Gate to  a Flight");
+            Console.WriteLine("4. Create Flight");
+            Console.WriteLine("5. Display Airline Flights");
+            Console.WriteLine("6. Modify Flight Details");
+            Console.WriteLine("7. Display Flight Schedule");
+            Console.WriteLine("0. Exit");
+
+            Console.Write("\nPlease select your option: ");
+            string? choice = Console.ReadLine();
             switch (choice)
             {
                 case "1":
-                    terminal.ListAllBoardingGates();
+                    ListAllFlights(terminal);
                     break;
                 case "2":
                     terminal.AssignBoardingGateToFlight();
@@ -52,6 +57,8 @@ class Program
                     break;
             }
         }
+
+       
 
         //method to add flights to dictionary
         void AddFlights(Terminal terminal)
@@ -87,6 +94,18 @@ class Program
                         terminal.AddFlight(flight);
                     }
                 }
+            }
+        }
+
+        void ListAllFlights(Terminal terminal)
+        {
+            Console.WriteLine("=============================================");
+            Console.WriteLine("List of Flights for Changi Airport Terminal 5");
+            Console.WriteLine("=============================================");
+            Console.WriteLine($"{"Flight Number", -15}{"Airline Name", -22}{"Origin", -22}{"Destination", -22}Expected Departure/Arrival Time");
+            foreach (Flight flight in terminal.Flights.Values)
+            {
+                Console.WriteLine($"{flight.FlightNumber,-15}{terminal.GetAirlineFromFlight(flight).Name,-22}{flight.Origin,-22}{flight.Destination,-22}{flight.ExpectedTime.ToString("dd/M/yyyy hh:mm tt")}");
             }
         }
     }

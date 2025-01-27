@@ -56,6 +56,20 @@ class Terminal
         return false;
     }
 
+    public Airline GetAirlineFromFlight(Flight flight)
+    {
+        string flight_code = flight.FlightNumber.Split(" ")[0];
+        Airline airline_name = null;
+        foreach (KeyValuePair<string, Airline> kvp in Airlines)
+        {
+            if (kvp.Key == flight_code)
+            {
+                airline_name = kvp.Value;
+            }
+        }
+        return airline_name;
+    }
+
     // Lists all available boarding gates and their assigned flights
     public void ListAllBoardingGates()
     {
