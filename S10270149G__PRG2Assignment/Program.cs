@@ -32,7 +32,7 @@ class Program
 
             Console.WriteLine("1. List All Flights");
             Console.WriteLine("2. List Boarding Gates");
-            Console.WriteLine("3. Assign  a Boarding Gate to  a Flight");
+            Console.WriteLine("3. Assign a Boarding Gate to a Flight");
             Console.WriteLine("4. Create Flight");
             Console.WriteLine("5. Display Airline Flights");
             Console.WriteLine("6. Modify Flight Details");
@@ -47,13 +47,14 @@ class Program
                     ListAllFlights(terminal);
                     break;
                 case "2":
-                    terminal.AssignBoardingGateToFlight();
+                    //terminal.AssignBoardingGateToFlight();
                     break;
                 case "3":
-                    terminal.PrintAirlineFees();
+                    AssignBoardingGate(terminal);
                     break;
                 case "4":
-                    return;
+                    CreateNewFlight(terminal);
+                    break;
                 default:
                     Console.WriteLine("Invalid option.");
                     break;
@@ -141,6 +142,152 @@ class Program
             {
                 Console.WriteLine($"{flight.FlightNumber,-15}{terminal.GetAirlineFromFlight(flight).Name,-22}{flight.Origin,-22}{flight.Destination,-22}{flight.ExpectedTime.ToString("dd/M/yyyy hh:mm tt")}");
             }
+        }
+        
+        void AssignBoardingGate(Terminal terminal)
+        {
+            Console.WriteLine("=============================================");
+            Console.WriteLine("Assign a Boarding Gate to a Flight");
+            Console.WriteLine("=============================================");
+            while (true)
+            {
+                Console.Write("Enter Flight Number: ");
+                string? flightNum = Console.ReadLine().ToUpper();
+                Console.Write("Enter Boarding Gate Name: ");
+                string? boardName = Console.ReadLine().ToUpper();
+
+                Flight flight = terminal.Flights[flightNum];
+
+                if (flight is NORMFlight)
+                {
+                    Console.WriteLine($"Flight Number: {flightNum}\nOrigin: {flight.Origin}\nDestination: {flight.Destination}\nExpected Time: {flight.ExpectedTime}\nSpecial Request Code: None");
+                }
+                else if (flight is CFFTFlight)
+                {
+                    Console.WriteLine($"Flight Number: {flightNum}\nOrigin: {flight.Origin}\nDestination: {flight.Destination}\nExpected Time: {flight.ExpectedTime}\nSpecial Request Code: CFFT");
+                }
+                else if (flight is DDJBFlight)
+                {
+                    Console.WriteLine($"Flight Number: {flightNum}\nOrigin: {flight.Origin}\nDestination: {flight.Destination}\nExpected Time: {flight.ExpectedTime}\nSpecial Request Code: DDJB");
+                }
+                else if (flight is LWTTFlight)
+                {
+                    Console.WriteLine($"Flight Number: {flightNum}\nOrigin: {flight.Origin}\nDestination: {flight.Destination}\nExpected Time: {flight.ExpectedTime}\nSpecial Request Code: LWTT");
+                }
+
+                BoardingGate boardingGate = terminal.BoardingGates[boardName];
+                if (boardingGate.AssignedFlight == null)
+                {
+                    boardingGate.AssignedFlight = flight;
+                    Console.WriteLine("Flight has been assigned to the Boarding Gate.");
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Boarding Gate is already assigned to another flight.");
+                    Console.WriteLine();
+                }
+            }
+            Console.WriteLine();
+        }
+            
+
+        void CreateNewFlight(Terminal terminal)
+        {
+            bool run = true;
+            bool run2 = true;
+            while (run)
+            {
+                Console.Write("Enter Flight Number: ");
+                string? flightNum = Console.ReadLine();
+                Console.Write("Enter Origin: ");
+                string? origin = Console.ReadLine();
+                Console.Write("Enter Destination: ");
+                string? destination = Console.ReadLine();
+                DateTime expectedTime;
+                while (true)
+                {
+                    try
+                    {
+                        Console.Write("Enter Expected Departure/Arrival Time (dd/mm/yyyy hh:mm): ");
+                        expectedTime = Convert.ToDateTime(Console.ReadLine());
+                        break;
+                    }
+                    catch (FormatException ex) 
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                }
+                while (run2)
+                {
+                    Console.WriteLine("Would you like to enter any additional information?(Y/N) ");
+                    string? ans = Console.ReadLine();
+                    if (ans == "Y")
+                    {
+                        while (true)
+                        {
+                            Console.Write("Enter Special Request Code: ");
+                            string? code = Console.ReadLine();
+                            if (code == "CFFT")
+                            {
+                                Flight flight = new CFFTFlight(flightNum, origin, destination, expectedTime);
+                                terminal.AddFlight(flight);
+                                run2 = false;
+                                break;
+                            }
+                            else if (code == "DDJB")
+                            {
+                                Flight flight = new DDJBFlight(flightNum, origin, destination, expectedTime);
+                                terminal.AddFlight(flight);
+                                run2 = false;
+                                break;
+                            }
+                            else if (code == "LWTT")
+                            {
+                                Flight flight = new LWTTFlight(flightNum, origin, destination, expectedTime);
+                                terminal.AddFlight(flight);
+                                run2 = false;
+                                break;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid input. Please try again.");
+                            }
+                        }
+                    }
+                    else if (ans == "N")
+                    {
+                        Flight flight1 = new NORMFlight(flightNum, origin, destination, expectedTime);
+                        terminal.AddFlight(flight1);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid input. Please try again.");
+                    }
+                }
+                using (StreamWriter sw = new StreamWriter("flights.csv", true))
+                {
+                    sw.WriteLine($"{flightNum},{origin},{destination},{expectedTime}");
+                }
+                while (true)
+                {
+                    Console.Write("Would you like to add another flight?(Y/N) ");
+                    if (Console.ReadLine() == "Y")
+                    {
+                        break;
+                    }
+                    else if (Console.ReadLine() == "N")
+                    {
+                        run = false;
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid input. Please try again.");
+                    }
+                }
+            }
+            Console.WriteLine("Flight(s) have been successfully added.");
         }
     }
 }
