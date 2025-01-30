@@ -6,6 +6,7 @@
 //==========================================================
 using S10270149G__PRG2Assignment;
 using System;
+using System.Numerics;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace S10270149G__PRG2Assignment;
 
@@ -54,6 +55,9 @@ class Program
                     break;
                 case "4":
                     CreateNewFlight(terminal);
+                    break;
+                case "7":
+                    DisplayFlightSchedule(terminal);
                     break;
                 default:
                     Console.WriteLine("Invalid option.");
@@ -146,10 +150,12 @@ class Program
         
         void AssignBoardingGate(Terminal terminal)
         {
+            bool run3 = true;
+            bool run4 = true;
             Console.WriteLine("=============================================");
             Console.WriteLine("Assign a Boarding Gate to a Flight");
             Console.WriteLine("=============================================");
-            while (true)
+            while (run3)
             {
                 Console.Write("Enter Flight Number: ");
                 string? flightNum = Console.ReadLine().ToUpper();
@@ -179,17 +185,62 @@ class Program
                 if (boardingGate.AssignedFlight == null)
                 {
                     boardingGate.AssignedFlight = flight;
-                    Console.WriteLine("Flight has been assigned to the Boarding Gate.");
-                    break;
                 }
                 else
                 {
                     Console.WriteLine("Boarding Gate is already assigned to another flight.");
                     Console.WriteLine();
                 }
+
+                while (run4)
+                {
+                    Console.Write("Would you like to update the Status of your Flight?(Y/N) ");
+                    if (Console.ReadLine() == "Y")
+                    {
+                        while (true)
+                        {
+                            Console.Write("1.Delayed \n2.Boarding \n3.On Time \nPlease select the new status of the flight: ");
+                            if (Console.ReadLine() == "1")
+                            {
+                                flight.Status = "Delayed";
+                                run4 = false;
+                                break;
+                            }
+                            else if (Console.ReadLine() == "2")
+                            {
+                                flight.Status = "Boarding";
+                                run4 = false;
+                                break;
+                            }
+                            else if (Console.ReadLine() == "3")
+                            {
+                                flight.Status = "On Time";
+                                run4 = false;
+                                break;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid input. Please try again.");
+                            }
+                        }
+                    }
+                    else if (Console.ReadLine() == "N")
+                    {
+                        flight.Status = "On Time";
+                        run4 = false;
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid input. Please try again.");
+                    }
+                    Console.WriteLine($"Flight {flightNum} has been assigned to the Boarding Gate {boardName}.");
+                }
+                run3 = false;
             }
             Console.WriteLine();
         }
+        
             
 
         void CreateNewFlight(Terminal terminal)
@@ -288,6 +339,22 @@ class Program
                 }
             }
             Console.WriteLine("Flight(s) have been successfully added.");
+        }
+
+        void DisplayFlightSchedule(Terminal terminal)
+        {
+            Console.WriteLine("=============================================");
+            Console.WriteLine("Flight Schedule for Changi Airport Terminal 5");
+            Console.WriteLine("=============================================");
+            List<Flight> flights = new List<Flight>();
+            Console.WriteLine($"{"Flight Number",-15}{"Airline Name",-22}{"Origin",-22}{"Destination",-22}{"Expected Departure/Arrival Time", -35}{"Status", -15}Boarding Gate");
+            foreach (Flight flight in terminal.Flights.Values)
+            {
+                flights.Add(terminal.Flights[flight.FlightNumber]);
+                flights.Sort();
+                Console.WriteLine($"{flights[0],-15}{flights[1],-22}{flights[2],-22}{flights[3],-22}{flights[4],-35}{flights[5],-15}{flights[6]}");
+                //Console.WriteLine($"{flight.FlightNumber,-15}{terminal.GetAirlineFromFlight(flight).Name,-22}{flight.Origin,-22}{flight.Destination,-22}{flight.ExpectedTime.ToString("dd/M/yyyy hh:mm tt"),-35}{flight.Status,-15}{flight.BoardingGateName}");
+            }
         }
     }
 }
