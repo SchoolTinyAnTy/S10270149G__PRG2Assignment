@@ -39,12 +39,17 @@ class Program
             Console.WriteLine("5. Display Airline Flights");
             Console.WriteLine("6. Modify Flight Details");
             Console.WriteLine("7. Display Flight Schedule");
+            Console.WriteLine("8. Bulk Process Unassigned Flights");
+            Console.WriteLine("9. Display Total Fee Per Airline");
             Console.WriteLine("0. Exit");
 
             Console.Write("\nPlease select your option: ");
             string? choice = Console.ReadLine();
             switch (choice)
             {
+                case "0":
+                    Console.WriteLine("Goodbye!");
+                    return;
                 case "1":
                     ListAllFlights(terminal);
                     break;
@@ -65,6 +70,12 @@ class Program
                     break;
                 case "7":
                     DisplayFlightSchedule(terminal);
+                    break;
+                case "8":
+                    ProcessUnassignedFlights(terminal);
+                    break;
+                case "9":
+                    DisplayTotalFeePerAirline(terminal);
                     break;
                 default:
                     Console.WriteLine("Invalid option.");
@@ -676,6 +687,192 @@ class Program
             Console.WriteLine("=============================================");
         }
 
+
+        // ✅ Advanced Feature (a): Process Unassigned Flights in Bulk
+        static void ProcessUnassignedFlights(Terminal terminal)
+        {
+            Console.WriteLine("\n=============================================");
+            Console.WriteLine("Processing Unassigned Flights to Boarding Gates");
+            Console.WriteLine("=============================================");
+
+            Queue<Flight> unassignedFlightsQueue = new Queue<Flight>();
+
+            // ✅ Step 1: Identify flights without assigned boarding gates
+            foreach (var flight in terminal.Flights.Values)
+            {
+                if (!terminal.BoardingGates.Values.Any(g => g.AssignedFlight == flight))
+                {
+                    unassignedFlightsQueue.Enqueue(flight);
+                }
+            }
+
+            int totalUnassignedFlights = unassignedFlightsQueue.Count;
+            Console.WriteLine($"Total Unassigned Flights: {totalUnassignedFlights}");
+
+            // ✅ Step 2: Identify unassigned boarding gates
+            int totalUnassignedGates = terminal.BoardingGates.Values.Count(g => g.AssignedFlight == null);
+            Console.WriteLine($"Total Unassigned Boarding Gates: {totalUnassignedGates}");
+
+            int flightsProcessed = 0;
+            int gatesProcessed = 0;
+
+            // ✅ Step 3: Process each flight in the queue
+            while (unassignedFlightsQueue.Count > 0)
+            {
+                Flight currentFlight = unassignedFlightsQueue.Dequeue();
+                string specialRequest = currentFlight is CFFTFlight ? "CFFT" :
+                                        currentFlight is DDJBFlight ? "DDJB" :
+                                        currentFlight is LWTTFlight ? "LWTT" : "None";
+
+                BoardingGate assignedGate = null;
+
+                // ✅ Step 4: Find a suitable boarding gate
+                if (specialRequest != "None")
+                {
+                    assignedGate = terminal.BoardingGates.Values.FirstOrDefault(g =>
+                        g.AssignedFlight == null &&
+                        ((specialRequest == "CFFT" && g.SupportsCFFT) ||
+                         (specialRequest == "DDJB" && g.SupportsDDJB) ||
+                         (specialRequest == "LWTT" && g.SupportsLWTT)));
+                }
+
+                if (assignedGate == null)
+                {
+                    // ✅ If no special request or no matching gate found, assign any unassigned gate
+                    assignedGate = terminal.BoardingGates.Values.FirstOrDefault(g => g.AssignedFlight == null);
+                }
+
+                if (assignedGate != null)
+                {
+                    assignedGate.AssignedFlight = currentFlight;
+                    flightsProcessed++;
+                    gatesProcessed++;
+
+                    // ✅ Display flight details after processing
+                    Console.WriteLine("\n=============================================");
+                    Console.WriteLine("Updated Flight Details:");
+                    Console.WriteLine($"Flight Number: {currentFlight.FlightNumber}");
+                    Console.WriteLine($"Airline Name: {terminal.GetAirlineFromFlight(currentFlight).Name}");
+                    Console.WriteLine($"Origin: {currentFlight.Origin}");
+                    Console.WriteLine($"Destination: {currentFlight.Destination}");
+                    Console.WriteLine($"Expected Departure/Arrival Time: {currentFlight.ExpectedTime:d/M/yyyy h:mm:ss tt}");
+                    Console.WriteLine($"Special Request Code: {specialRequest}");
+                    Console.WriteLine($"Assigned Boarding Gate: {assignedGate.GateName}");
+                    Console.WriteLine("=============================================");
+                }
+            }
+
+            // ✅ Step 5: Display final summary
+            Console.WriteLine("\n=============================================");
+            Console.WriteLine("Bulk Processing Summary");
+            Console.WriteLine("=============================================");
+            Console.WriteLine($"Total Flights Processed: {flightsProcessed}");
+            Console.WriteLine($"Total Boarding Gates Assigned: {gatesProcessed}");
+
+            int totalFlights = terminal.Flights.Count;
+            int percentageAssigned = (int)((flightsProcessed / (double)totalFlights) * 100);
+            Console.WriteLine($"Percentage of Flights Assigned Automatically: {percentageAssigned}%");
+            Console.WriteLine("=============================================");
+        }
+
+
+        // ✅ Advanced Feature (b): Compute Total Fee Per Airline for the Day
+        static void DisplayTotalFeePerAirline(Terminal terminal)
+        {
+            Console.WriteLine("\n=============================================");
+            Console.WriteLine("Total Fees Per Airline for the Day");
+            Console.WriteLine("=============================================");
+
+            // ✅ Step 1: Check if all flights have assigned boarding gates
+            List<Flight> unassignedFlights = terminal.Flights.Values.Where(f => !terminal.BoardingGates.Values.Any(g => g.AssignedFlight == f)).ToList();
+
+            if (unassignedFlights.Count > 0)
+            {
+                Console.WriteLine("Warning: Some flights do not have assigned boarding gates.");
+                Console.WriteLine("Please ensure all flights are assigned a gate before running this feature again.");
+                return;
+            }
+
+            double totalAirlineFees = 0;
+            double totalDiscounts = 0;
+            Dictionary<string, double> airlineFees = new Dictionary<string, double>();
+            Dictionary<string, double> airlineDiscounts = new Dictionary<string, double>();
+
+            // ✅ Step 2: Calculate fees per airline
+            foreach (var airline in terminal.Airlines.Values)
+            {
+                double airlineTotalFee = 0;
+                double airlineDiscount = 0;
+
+                List<Flight> airlineFlights = terminal.Flights.Values.Where(f => terminal.GetAirlineFromFlight(f) == airline).ToList();
+
+                // ✅ Step 3: Calculate fees per flight
+                foreach (var flight in airlineFlights)
+                {
+                    double flightFee = 0;
+
+                    // ✅ Apply Singapore-related fees
+                    if (flight.Origin == "Singapore (SIN)")
+                    {
+                        flightFee += 800; // Departure Fee
+                    }
+                    if (flight.Destination == "Singapore (SIN)")
+                    {
+                        flightFee += 500; // Arrival Fee
+                    }
+
+                    // ✅ Apply special request fees
+                    if (flight is CFFTFlight) flightFee += 50;
+                    else if (flight is DDJBFlight) flightFee += 40;
+                    else if (flight is LWTTFlight) flightFee += 30;
+
+                    // ✅ Apply boarding gate base fee
+                    flightFee += 300;
+
+                    airlineTotalFee += flightFee;
+                }
+
+                // ✅ Apply promotional discounts (Example: If an airline has > 5 flights, give a 10% discount)
+                if (airlineFlights.Count > 5)
+                {
+                    airlineDiscount = airlineTotalFee * 0.10;
+                }
+
+                // ✅ Store calculations for final report
+                airlineFees[airline.Code] = airlineTotalFee;
+                airlineDiscounts[airline.Code] = airlineDiscount;
+                totalAirlineFees += airlineTotalFee;
+                totalDiscounts += airlineDiscount;
+            }
+
+            double finalTotalFees = totalAirlineFees - totalDiscounts;
+            double discountPercentage = (totalDiscounts / totalAirlineFees) * 100;
+
+            // ✅ Step 4: Display fees per airline
+            Console.WriteLine("\n=============================================");
+            Console.WriteLine("Airline Fee Breakdown");
+            Console.WriteLine("=============================================");
+            Console.WriteLine("{0,-20} {1,-15} {2,-15} {3,-15}", "Airline Name", "Subtotal ($)", "Discount ($)", "Total Fee ($)");
+
+            foreach (var airline in terminal.Airlines.Values)
+            {
+                Console.WriteLine("{0,-20} {1,-15:F2} {2,-15:F2} {3,-15:F2}",
+                                  airline.Name,
+                                  airlineFees[airline.Code],
+                                  airlineDiscounts[airline.Code],
+                                  airlineFees[airline.Code] - airlineDiscounts[airline.Code]);
+            }
+
+            // ✅ Step 5: Display final totals
+            Console.WriteLine("\n=============================================");
+            Console.WriteLine("Final Total Fees Summary");
+            Console.WriteLine("=============================================");
+            Console.WriteLine($"Total Airline Fees: ${totalAirlineFees:F2}");
+            Console.WriteLine($"Total Discounts Applied: ${totalDiscounts:F2}");
+            Console.WriteLine($"Final Total Fees Collected: ${finalTotalFees:F2}");
+            Console.WriteLine($"Percentage Discount Applied: {discountPercentage:F2}%");
+            Console.WriteLine("=============================================");
+        }
 
     }
 
