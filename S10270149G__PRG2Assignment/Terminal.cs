@@ -14,11 +14,11 @@ using System.IO;
 // ✅ The Terminal class manages airlines, flights, boarding gates, and gate fees.
 public class Terminal
 { 
-    private string _terminalName;
-    private Dictionary<string, Airline> _airlines = new Dictionary<string, Airline>();
-    private Dictionary<string, Flight> _flights = new Dictionary<string, Flight>();
-    private Dictionary<string, BoardingGate> _boardingGates = new Dictionary<string, BoardingGate>();
-    private Dictionary<string, double> _gateFees = new Dictionary<string, double>();
+    private string terminalName;
+    private Dictionary<string, Airline> airlines = new Dictionary<string, Airline>();
+    private Dictionary<string, Flight> flights = new Dictionary<string, Flight>();
+    private Dictionary<string, BoardingGate> boardingGates = new Dictionary<string, BoardingGate>();
+    private Dictionary<string, double> gateFees = new Dictionary<string, double>();
 
     // ✅ Properties for terminal-related information
     public string TerminalName { get; set; }
