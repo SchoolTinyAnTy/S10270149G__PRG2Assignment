@@ -5,36 +5,37 @@
 // Partner Name   : Ewe Yoke Kay 
 //==========================================================
 namespace S10270149G__PRG2Assignment;
+using System;
 
-// Abstract class representing a generic flight
-abstract class Flight : IComparable<Flight> 
+// The Flight class represents a flight with key details.
+public class Flight : IComparable<Flight>
 {
-    public string FlightNumber { get; set; }  // Unique identifier for the flight
-    public string Origin { get; set; }  // Origin airport of the flight
-    public string Destination { get; set; }  // Destination airport of the flight
-    public DateTime ExpectedTime { get; set; }  // Scheduled departure time
-    public string Status { get; set; }  // Current flight status
-    public string BoardingGateName { get; set; }  // Boarding gate assigned to the flight
+    public string FlightNumber { get; set; }  // Unique flight identifier
+    public string Origin { get; set; }  // Departure location
+    public string Destination { get; set; }  // Arrival location
+    public DateTime ExpectedTime { get; set; }  // Scheduled departure/arrival time
+    public string Status { get; set; }  // ✅ Fix: Added missing Status property
 
-    public int CompareTo(Flight other)
+    // Constructor initializes a flight with validation to prevent null values.
+    public Flight(string flightNumber, string origin, string destination, DateTime expectedTime, string status = "Scheduled")
     {
-        return ExpectedTime.CompareTo(other.ExpectedTime);
+        FlightNumber = flightNumber ?? "Unknown";  // Prevents null flight number
+        Origin = origin ?? "Unknown";  // Prevents null origin
+        Destination = destination ?? "Unknown";  // Prevents null destination
+        ExpectedTime = expectedTime;  // Ensures a valid DateTime is assigned
+        Status = status ?? "Scheduled";  // ✅ Assigns default status if none is provided
     }
 
-    // Constructor to initialize a flight object
-    public Flight(string flightNumber, string origin, string destination, DateTime expectedTime)
+    // ✅ Fix: Corrected CompareTo method implementation
+    public int CompareTo(Flight? other)
     {
-        FlightNumber = flightNumber;
-        Origin = origin;
-        Destination = destination;
-        ExpectedTime = expectedTime;
-        Status = "Scheduled";
-        BoardingGateName = "Not Assigned";  // Default value for gate name
+        if (other == null) return 1; // Ensures null-safe comparison
+        return ExpectedTime.CompareTo(other.ExpectedTime); // Sorts flights by expected time
     }
 
-    // Returns flight details as a formatted string
+    // Converts flight information into a readable string.
     public override string ToString()
     {
-        return $"Flight {FlightNumber} from {Origin} to {Destination}, Departure: {ExpectedTime}, Status: {Status}, Gate: {BoardingGateName}";
+        return $"{FlightNumber}: {Origin} -> {Destination} at {ExpectedTime} (Status: {Status})";
     }
 }

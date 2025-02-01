@@ -48,7 +48,7 @@ class Program
                     ListAllFlights(terminal);
                     break;
                 case "2":
-                    //terminal.AssignBoardingGateToFlight();
+                    terminal.ListAllBoardingGates(); 
                     break;
                 case "3":
                     AssignBoardingGate(terminal);
