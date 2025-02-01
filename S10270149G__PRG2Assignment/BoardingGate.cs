@@ -13,7 +13,7 @@ public class BoardingGate
     private bool supportsCFFT;  // Whether the gate supports CFFT requests
     private bool supportsDDJB;  // Whether the gate supports DDJB requests
     private bool supportsLWTT;  // Whether the gate supports LWTT requests
-    private Flight? assignedFlight;  // Flight assigned to the gate
+    private Flight assignedFlight;  // Flight assigned to the gate
 
     public string GateName { get; set; }  // Gate identifier (e.g., "A1")
     public bool SupportsCFFT { get; set; }  // Whether the gate supports CFFT requests

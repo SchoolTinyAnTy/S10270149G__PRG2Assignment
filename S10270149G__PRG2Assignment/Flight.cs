@@ -10,11 +10,11 @@ using System;
 // The Flight class represents a flight with key details.
 public class Flight : IComparable<Flight>
 {
-    private string _flightNumber;
-    private string _origin;
-    private string _destination;
-    private DateTime _expectedTime;
-    private string _status;
+    private string flightNumber;
+    private string origin;
+    private string destination;
+    private DateTime expectedTime;
+    private string status;
 
     public string FlightNumber { get; set; }  // Unique flight identifier
     public string Origin { get; set; }  // Departure location
