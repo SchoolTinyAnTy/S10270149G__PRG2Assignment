@@ -380,20 +380,57 @@ class Program
             Console.WriteLine("Flight(s) have been successfully added.");
         }
 
-        void DisplayFlightSchedule(Terminal terminal)
+        //Display Flight Schedule in Chronological Order (Matches Sample Output)
+        static void DisplayFlightSchedule(Terminal terminal)
         {
             Console.WriteLine("=============================================");
             Console.WriteLine("Flight Schedule for Changi Airport Terminal 5");
             Console.WriteLine("=============================================");
-            List<Flight> flights = new List<Flight>();
-            Console.WriteLine($"{"Flight Number",-15}{"Airline Name",-22}{"Origin",-22}{"Destination",-22}{"Expected Departure/Arrival Time", -35}{"Status", -15}Boarding Gate");
-            foreach (Flight flight in terminal.Flights.Values)
+
+            // ✅ Step 1: Check if there are no flights
+            if (terminal.Flights.Count == 0)
             {
-                flights.Add(terminal.Flights[flight.FlightNumber]);
-                flights.Sort();
-                Console.WriteLine($"{flights[0],-15}{flights[1],-22}{flights[2],-22}{flights[3],-22}{flights[4],-35}{flights[5],-15}{flights[6]}");
-                //Console.WriteLine($"{flight.FlightNumber,-15}{terminal.GetAirlineFromFlight(flight).Name,-22}{flight.Origin,-22}{flight.Destination,-22}{flight.ExpectedTime.ToString("dd/M/yyyy hh:mm tt"),-35}{flight.Status,-15}{flight.BoardingGateName}");
+                Console.WriteLine("No flights available.");
+                return; // Exit the function if there are no flights
             }
+
+            // ✅ Step 2: Convert the Flights Dictionary to a List and sort it by ExpectedTime
+            List<Flight> flights = new List<Flight>(terminal.Flights.Values);
+            flights.Sort(); // Uses the CompareTo() method in Flight.cs to sort by ExpectedTime
+
+            // ✅ Step 3: Print the column headers in the required format
+            Console.WriteLine("{0,-15} {1,-25} {2,-25} {3,-25} {4,-35} {5,-15} {6,-15}",
+                              "Flight Number", "Airline Name", "Origin", "Destination",
+                              "Expected Departure/Arrival Time", "Status", "Boarding Gate");
+
+            // ✅ Step 4: Loop through each flight and print details
+            foreach (Flight flight in flights)
+            {
+                // Retrieve the airline associated with the flight
+                Airline airline = terminal.GetAirlineFromFlight(flight);
+
+                // If no airline is found, assign a placeholder name
+                string airlineName = airline != null ? airline.Name : "Unknown Airline";
+
+                // If no boarding gate is assigned, display "Unassigned"
+                string boardingGate = "Unassigned";
+                foreach (var gate in terminal.BoardingGates.Values)
+                {
+                    if (gate.AssignedFlight == flight)
+                    {
+                        boardingGate = gate.GateName;
+                        break;
+                    }
+                }
+
+                // Print flight details in the correct format
+                Console.WriteLine("{0,-15} {1,-25} {2,-25} {3,-25} {4,-35} {5,-15} {6,-15}",
+                                  flight.FlightNumber, airlineName, flight.Origin, flight.Destination,
+                                  flight.ExpectedTime.ToString("dd/M/yyyy hh:mm:ss tt"), flight.Status, boardingGate);
+            }
+
+            Console.WriteLine("=============================================");
         }
+
     }
 }
