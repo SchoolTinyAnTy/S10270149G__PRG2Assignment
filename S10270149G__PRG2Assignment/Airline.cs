@@ -7,7 +7,7 @@
 namespace S10270149G__PRG2Assignment;
 
 // Class representing an airline
-class Airline
+public class Airline
 {
     private string name;  // Full airline name
     private string code;  // Two-letter airline code (e.g., "SQ")

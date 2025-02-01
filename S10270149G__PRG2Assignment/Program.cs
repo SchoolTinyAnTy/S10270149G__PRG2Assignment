@@ -75,7 +75,7 @@ class Program
                     ProcessUnassignedFlights(terminal);
                     break;
                 case "9":
-                    DisplayTotalFeePerAirline(terminal);
+                    //DisplayTotalFeePerAirline(terminal);
                     break;
                 default:
                     Console.WriteLine("Invalid option.");
