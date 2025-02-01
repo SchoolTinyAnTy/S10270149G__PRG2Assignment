@@ -6,6 +6,7 @@
 //==========================================================
 using S10270149G__PRG2Assignment;
 using System;
+using System.Diagnostics.Tracing;
 using System.Numerics;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace S10270149G__PRG2Assignment;
@@ -397,8 +398,8 @@ class Program
             {
                 flights.Add(terminal.Flights[flight.FlightNumber]);
                 flights.Sort();
-                Console.WriteLine($"{flights[0],-15}{flights[1],-22}{flights[2],-22}{flights[3],-22}{flights[4],-35}{flights[5],-15}{flights[6]}");
-                //Console.WriteLine($"{flight.FlightNumber,-15}{terminal.GetAirlineFromFlight(flight).Name,-22}{flight.Origin,-22}{flight.Destination,-22}{flight.ExpectedTime.ToString("dd/M/yyyy hh:mm tt"),-35}{flight.Status,-15}{flight.BoardingGateName}");
+         
+                Console.WriteLine($"{flight.FlightNumber,-15}{terminal.GetAirlineFromFlight(flight).Name,-22}{flight.Origin,-22}{flight.Destination,-22}{flight.ExpectedTime.ToString("dd/M/yyyy hh:mm tt"),-35}{flight.Status,-15}");
             }
         }
         // ✅ Feature 7 (Option 5): Display Flight Schedule per Airline (Sorted by Flight Number)
@@ -617,15 +618,33 @@ class Program
                 case "3":
                     // ✅ Modify Special Request Code
                     Console.Write("\nEnter new Special Request Code (None, CFFT, DDJB, LWTT): ");
-                    string newSpecialRequest = Console.ReadLine()?.Trim().ToUpper();
-                    Console.WriteLine("Flight Special Request Code updated!");
+                    string requestCode = Console.ReadLine().ToUpper();
+                    if (requestCode == "CFFT")
+                        selectedFlight = new CFFTFlight(selectedFlight.FlightNumber, selectedFlight.Origin, selectedFlight.Destination, selectedFlight.ExpectedTime);
+                    else if (requestCode == "DDJB")
+                        selectedFlight = new DDJBFlight(selectedFlight.FlightNumber, selectedFlight.Origin, selectedFlight.Destination, selectedFlight.ExpectedTime);
+                    else if (requestCode == "LWTT")
+                        selectedFlight = new LWTTFlight(selectedFlight.FlightNumber, selectedFlight.Origin, selectedFlight.Destination, selectedFlight.ExpectedTime);
+                    else
+                        selectedFlight = new NORMFlight(selectedFlight.FlightNumber, selectedFlight.Origin, selectedFlight.Destination, selectedFlight.ExpectedTime);
+                    terminal.Flights[flightNum] = selectedFlight;
+                    Console.WriteLine("\nSpecial Request Code updated!");
                     break;
 
                 case "4":
                     // ✅ Modify Boarding Gate
                     Console.Write("\nEnter new Boarding Gate: ");
-                    string newBoardingGate = Console.ReadLine()?.Trim().ToUpper();
-                    Console.WriteLine($"Flight {flightNum} is now assigned to Boarding Gate {newBoardingGate}.");
+                    string gateName = Console.ReadLine().ToUpper();
+
+                    if (!terminal.BoardingGates.ContainsKey(gateName))
+                    {
+                        Console.WriteLine("Error: Boarding Gate not found.");
+                        return;
+                    }
+
+                    BoardingGate gate = terminal.BoardingGates[gateName];
+                    gate.AssignedFlight = selectedFlight;
+                    Console.WriteLine("\nBoarding Gate updated!");
                     break;
 
                 default:
@@ -652,8 +671,8 @@ class Program
             Console.WriteLine($"Destination: {selectedFlight.Destination}");
             Console.WriteLine($"Expected Departure/Arrival Time: {selectedFlight.ExpectedTime:dd/MM/yyyy HH:mm}");
             Console.WriteLine($"Status: {selectedFlight.Status}");
-            Console.WriteLine($"Special Request Code: {specialRequestCode}");
-            Console.WriteLine($"Boarding Gate: {boardingGate}");
+            Console.WriteLine($"Special Request Code: {(selectedFlight is NORMFlight ? "None" : selectedFlight.GetType().Name.Replace("Flight", "").ToUpper())}");
+            Console.WriteLine($"Boarding Gate: {terminal.BoardingGates.Values.FirstOrDefault(g => g.AssignedFlight == selectedFlight)?.GateName ?? "Unassigned"}");
             Console.WriteLine("=============================================");
         }
 
