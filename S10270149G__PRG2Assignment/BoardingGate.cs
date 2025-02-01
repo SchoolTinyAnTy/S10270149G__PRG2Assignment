@@ -18,7 +18,7 @@ public class BoardingGate
     public string GateName { get; set; }  // Gate identifier (e.g., "A1")
     public bool SupportsCFFT { get; set; }  // Whether the gate supports CFFT requests
     public bool SupportsDDJB { get; set; }  // Whether the gate supports DDJB requests
-    public bool SupportsLWTT { get;  set; }  // Whether the gate supports LWTT requests
+    public bool SupportsLWTT { get; set; }  // Whether the gate supports LWTT requests
     public Flight? AssignedFlight { get; set; }  // Flight assigned to the gate
 
     // Constructor to initialize boarding gate properties

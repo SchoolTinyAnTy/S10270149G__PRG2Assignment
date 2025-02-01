@@ -13,7 +13,6 @@ public class Airline
     private string code;  // Two-letter airline code (e.g., "SQ")
     private Dictionary<string, Flight> flights = new Dictionary<string, Flight>();
 
-
     public string Name { get; set; }  // Full airline name
     public string Code { get; set; }  // Two-letter airline code (e.g., "SQ")
     public Dictionary<string, Flight> Flights { get; set; } = new Dictionary<string, Flight>();
@@ -28,21 +27,32 @@ public class Airline
     // Add flight to the airline's flight dictionary
     public bool AddFlight(Flight flight)
     {
-        if (Flights.ContainsKey(flight.FlightNumber))
-            return false;
-        Flights[flight.FlightNumber] = flight;
-        return true;
+        if (flight == null) throw new ArgumentNullException(nameof(flight)); // Check for null flight
+        if (!Flights.ContainsKey(flight.FlightNumber))
+        {
+            Flights.Add(flight.FlightNumber, flight);
+            return true;
+        }
+        Console.WriteLine("Error: Flight already exists.");
+        return false;
     }
 
     // Remove a flight by its flight number
     public bool RemoveFlight(string flightNumber)
     {
-        return Flights.Remove(flightNumber);
+        if (string.IsNullOrEmpty(flightNumber)) throw new ArgumentNullException(nameof(flightNumber)); // Check for null or empty flight number
+        if (Flights.ContainsKey(flightNumber))
+        {
+            Flights.Remove(flightNumber);
+            return true;
+        }
+        Console.WriteLine("Error: Flight not found.");
+        return false;
     }
 
     // Returns airline details as a formatted string
     public override string ToString()
     {
-        return $"Airline: {Code}, Name: {Name}";
+        return $"Airline: {Name} ({Code})";
     }
 }

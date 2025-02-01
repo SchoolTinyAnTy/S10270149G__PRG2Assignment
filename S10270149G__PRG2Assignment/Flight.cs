@@ -10,38 +10,38 @@ using System;
 // The Flight class represents a flight with key details.
 public class Flight : IComparable<Flight>
 {
-    private string flightNumber;
-    private string origin;
-    private string destination;
-    private DateTime expectedTime;
-    private string status;
+    private string flightNumber;  // Unique flight identifier
+    private string origin;  // Departure location
+    private string destination;  // Arrival location
+    private DateTime expectedTime;  // Scheduled departure/arrival time
+    private string status;  // Flight status
 
     public string FlightNumber { get; set; }  // Unique flight identifier
     public string Origin { get; set; }  // Departure location
     public string Destination { get; set; }  // Arrival location
     public DateTime ExpectedTime { get; set; }  // Scheduled departure/arrival time
-    public string Status { get; set; }  // ✅ Fix: Added missing Status property
+    public string Status { get; set; }  // Flight status
 
     // Constructor initializes a flight with validation to prevent null values.
     public Flight(string flightNumber, string origin, string destination, DateTime expectedTime, string status = "Scheduled")
     {
-        FlightNumber = flightNumber ?? "Unknown";  // Prevents null flight number
-        Origin = origin ?? "Unknown";  // Prevents null origin
-        Destination = destination ?? "Unknown";  // Prevents null destination
-        ExpectedTime = expectedTime;  // Ensures a valid DateTime is assigned
-        Status = status ?? "Scheduled";  // ✅ Assigns default status if none is provided
+        FlightNumber = flightNumber ?? throw new ArgumentNullException(nameof(flightNumber)); // Check for null flight number
+        Origin = origin ?? throw new ArgumentNullException(nameof(origin)); // Check for null origin
+        Destination = destination ?? throw new ArgumentNullException(nameof(destination)); // Check for null destination
+        ExpectedTime = expectedTime;
+        Status = status;
     }
 
-    // ✅ Fix: Corrected CompareTo method implementation
+    // CompareTo method implementation
     public int CompareTo(Flight? other)
     {
-        if (other == null) return 1; // Ensures null-safe comparison
-        return ExpectedTime.CompareTo(other.ExpectedTime); // Sorts flights by expected time
+        if (other == null) return 1;
+        return ExpectedTime.CompareTo(other.ExpectedTime);
     }
 
     // Converts flight information into a readable string.
     public override string ToString()
     {
-        return $"{FlightNumber}: {Origin} -> {Destination} at {ExpectedTime} (Status: {Status})";
+        return $"Flight: {FlightNumber}, Origin: {Origin}, Destination: {Destination}, Expected Time: {ExpectedTime}, Status: {Status}";
     }
 }

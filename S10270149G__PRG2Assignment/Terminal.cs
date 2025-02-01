@@ -11,41 +11,40 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-// ✅ The Terminal class manages airlines, flights, boarding gates, and gate fees.
+// The Terminal class manages airlines, flights, boarding gates, and gate fees.
 public class Terminal
-{ 
+{
     private string terminalName;
     private Dictionary<string, Airline> airlines = new Dictionary<string, Airline>();
     private Dictionary<string, Flight> flights = new Dictionary<string, Flight>();
     private Dictionary<string, BoardingGate> boardingGates = new Dictionary<string, BoardingGate>();
     private Dictionary<string, double> gateFees = new Dictionary<string, double>();
 
-    // ✅ Properties for terminal-related information
+    // Properties for terminal-related information
     public string TerminalName { get; set; }
     public Dictionary<string, Airline> Airlines { get; set; } = new Dictionary<string, Airline>();
     public Dictionary<string, Flight> Flights { get; set; } = new Dictionary<string, Flight>();
     public Dictionary<string, BoardingGate> BoardingGates { get; set; } = new Dictionary<string, BoardingGate>();
-
-    // ✅ Stores gate fees using gate names as keys
     public Dictionary<string, double> GateFees { get; set; } = new Dictionary<string, double>();
 
-    // ✅ Constructor initializes the terminal with a given name.
+    // Constructor initializes the terminal with a given name.
     public Terminal(string name)
     {
         TerminalName = name;
     }
 
-    // ✅ Method to find the airline associated with a given flight
+    // Method to find the airline associated with a given flight
     public Airline GetAirlineFromFlight(Flight flight)
     {
-        if (flight == null) return null;
+        if (flight == null) return null; // Check for null flight
         string flightCode = flight.FlightNumber.Split(" ")[0];
         return Airlines.ContainsKey(flightCode) ? Airlines[flightCode] : null;
     }
 
-    // ✅ Method to add a new airline
+    // Method to add a new airline
     public bool AddAirline(Airline airline)
     {
+        if (airline == null) throw new ArgumentNullException(nameof(airline)); // Check for null airline
         if (!Airlines.ContainsKey(airline.Code))
         {
             Airlines.Add(airline.Code, airline);
@@ -55,9 +54,10 @@ public class Terminal
         return false;
     }
 
-    // ✅ Method to add a new flight
+    // Method to add a new flight
     public bool AddFlight(Flight flight)
     {
+        if (flight == null) throw new ArgumentNullException(nameof(flight)); // Check for null flight
         if (!Flights.ContainsKey(flight.FlightNumber))
         {
             Flights.Add(flight.FlightNumber, flight);
@@ -67,20 +67,21 @@ public class Terminal
         return false;
     }
 
-    // ✅ Method to add a new boarding gate and assign default fees
+    // Method to add a new boarding gate and assign default fees
     public bool AddBoardingGate(BoardingGate gate)
     {
+        if (gate == null) throw new ArgumentNullException(nameof(gate)); // Check for null gate
         if (!BoardingGates.ContainsKey(gate.GateName))
         {
             BoardingGates.Add(gate.GateName, gate);
 
-            // ✅ Assign default boarding gate fee
+            // Assign default boarding gate fee
             double gateFee = 300;
             if (gate.SupportsDDJB) gateFee += 300;
             if (gate.SupportsCFFT) gateFee += 150;
             if (gate.SupportsLWTT) gateFee += 500;
 
-            GateFees[gate.GateName] = gateFee;  // ✅ Store fee in dictionary
+            GateFees[gate.GateName] = gateFee;  // Store fee in dictionary
 
             return true;
         }
@@ -88,7 +89,7 @@ public class Terminal
         return false;
     }
 
-    // ✅ Method to calculate total fees collected from all boarding gates
+    // Method to calculate total fees collected from all boarding gates
     public double CalculateTotalGateFees()
     {
         double totalFees = 0;
@@ -96,13 +97,13 @@ public class Terminal
         {
             if (gate.AssignedFlight != null)
             {
-                totalFees += GateFees[gate.GateName]; // ✅ Add assigned gate fees
+                totalFees += GateFees[gate.GateName]; // Add assigned gate fees
             }
         }
         return totalFees;
     }
 
-    // ✅ Feature 4: List All Boarding Gates with Exact Formatting as Sample Output
+    // Feature 4: List All Boarding Gates with Exact Formatting as Sample Output
     public void ListAllBoardingGates()
     {
         if (BoardingGates.Count == 0)
@@ -114,17 +115,17 @@ public class Terminal
         Console.WriteLine("=============================================");
         Console.WriteLine("List of Boarding Gates for Changi Airport Terminal 5");
         Console.WriteLine("=============================================");
-        Console.WriteLine("{0,-10} {1,-20} {2,-20} {3,-20} {4,-10}",
-                          "Gate Name", "DDJB", "CFFT", "LWTT", "Gate Fee ($)");
+        Console.WriteLine("{0,-10} {1,-20} {2,-20} {3,-20}",
+                          "Gate Name", "DDJB", "CFFT", "LWTT");
 
         foreach (var gate in BoardingGates.Values)
         {
-            Console.WriteLine("{0,-10} {1,-20} {2,-20} {3,-20} {4,-10}",
+            Console.WriteLine("{0,-10} {1,-20} {2,-20} {3,-20}",
                               gate.GateName,
                               gate.SupportsDDJB ? "True" : "False",
                               gate.SupportsCFFT ? "True" : "False",
-                              gate.SupportsLWTT ? "True" : "False",
-                              GateFees[gate.GateName]);
+                              gate.SupportsLWTT ? "True" : "False");
+                              
         }
 
         Console.WriteLine("=============================================");
