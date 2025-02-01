@@ -14,6 +14,7 @@ namespace S10270149G__PRG2Assignment
 {
     class LWTTFlight : Flight
     {
+        private double requestFee;
         public double RequestFee { get; set; }
 
         public LWTTFlight(string flightNumber, string origin, string destination, DateTime expectedTime) : base(flightNumber, origin, destination, expectedTime)

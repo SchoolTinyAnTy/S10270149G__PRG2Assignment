@@ -14,7 +14,8 @@ namespace S10270149G__PRG2Assignment
 {
     public class CFFTFlight : Flight
     {
-        private double RequestFee { get; set; }
+        private double requestFee;
+        public double RequestFee { get; set; }
 
         public CFFTFlight(string flightNumber, string origin, string destination, DateTime expectedTime) : base(flightNumber, origin, destination, expectedTime)
         {

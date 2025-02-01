@@ -9,11 +9,17 @@ namespace S10270149G__PRG2Assignment;
 // Class representing a boarding gate
 public class BoardingGate
 {
-    public string GateName { get; private set; }  // Gate identifier (e.g., "A1")
-    public bool SupportsCFFT { get; private set; }  // Whether the gate supports CFFT requests
-    public bool SupportsDDJB { get; private set; }  // Whether the gate supports DDJB requests
-    public bool SupportsLWTT { get; private set; }  // Whether the gate supports LWTT requests
-    public Flight? AssignedFlight { get; private set; }  // Flight assigned to the gate
+    private string gateName;  // Gate identifier (e.g., "A1")
+    private bool supportsCFFT;  // Whether the gate supports CFFT requests
+    private bool supportsDDJB;  // Whether the gate supports DDJB requests
+    private bool supportsLWTT;  // Whether the gate supports LWTT requests
+    private Flight? assignedFlight;  // Flight assigned to the gate
+
+    public string GateName { get; set; }  // Gate identifier (e.g., "A1")
+    public bool SupportsCFFT { get; set; }  // Whether the gate supports CFFT requests
+    public bool SupportsDDJB { get; set; }  // Whether the gate supports DDJB requests
+    public bool SupportsLWTT { get;  set; }  // Whether the gate supports LWTT requests
+    public Flight? AssignedFlight { get; set; }  // Flight assigned to the gate
 
     // Constructor to initialize boarding gate properties
     public BoardingGate(string gateName, bool supportsCFFT, bool supportsDDJB, bool supportsLWTT)
