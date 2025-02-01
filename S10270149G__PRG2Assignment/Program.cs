@@ -650,7 +650,7 @@ class Program
             Console.WriteLine($"Airline Name: {selectedAirline.Name}");
             Console.WriteLine($"Origin: {selectedFlight.Origin}");
             Console.WriteLine($"Destination: {selectedFlight.Destination}");
-            Console.WriteLine($"Expected Departure/Arrival Time: {selectedFlight.ExpectedTime:d/M/yyyy h:mm:ss tt}");
+            Console.WriteLine($"Expected Departure/Arrival Time: {selectedFlight.ExpectedTime:dd/MM/yyyy HH:mm}");
             Console.WriteLine($"Status: {selectedFlight.Status}");
             Console.WriteLine($"Special Request Code: {specialRequestCode}");
             Console.WriteLine($"Boarding Gate: {boardingGate}");
