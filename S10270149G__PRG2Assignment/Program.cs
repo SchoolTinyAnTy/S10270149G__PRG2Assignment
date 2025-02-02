@@ -912,7 +912,7 @@ class Program
             Console.WriteLine($"\n{"Total Subtotal",-20}{"Total Discounts",-20}{"Final Total Fees",-20}{"Discount Percentage"}");
             double finalTotalFees = totalAirlineFees - totalDiscounts;
             double discountPercentage = (totalDiscounts / totalAirlineFees) * 100;
-            Console.WriteLine($"${totalAirlineFees,-19}${totalDiscounts,-19}${finalTotalFees,-19}{discountPercentage}%");
+            Console.WriteLine($"${totalAirlineFees,-19}${totalDiscounts,-19}${finalTotalFees,-19}{discountPercentage:F2}%");
         }
     }
 }
