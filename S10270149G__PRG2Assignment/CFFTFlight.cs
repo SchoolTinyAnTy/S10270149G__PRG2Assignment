@@ -24,16 +24,7 @@ namespace S10270149G__PRG2Assignment
 
         public double CalculateFees()
         {
-            double baseFee = 300;
-            if (Destination == "Singapore (SIN)")
-            {
-                baseFee += RequestFee + 500;
-            }
-            else if (Origin == "Singapore (SIN)")
-            {
-                baseFee += RequestFee + 800;
-            }
-            return baseFee;
+            return base.CalculateFees() + RequestFee;
         }
 
         public override string ToString()

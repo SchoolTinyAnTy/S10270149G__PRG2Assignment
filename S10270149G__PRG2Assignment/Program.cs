@@ -6,13 +6,14 @@
 //==========================================================
 using S10270149G__PRG2Assignment;
 using System;
+using System.ComponentModel.Design;
 using System.Diagnostics.Tracing;
 using System.Numerics;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace S10270149G__PRG2Assignment;
 
 class Program
-{   
+{
     static void Main(string[] args)
     {
         Terminal terminal = new Terminal("Changi T5");
@@ -54,7 +55,7 @@ class Program
                     ListAllFlights(terminal);
                     break;
                 case "2":
-                    terminal.ListAllBoardingGates(); 
+                    terminal.ListAllBoardingGates();
                     break;
                 case "3":
                     AssignBoardingGate(terminal);
@@ -65,7 +66,7 @@ class Program
                 case "5":
                     DisplayAirlineFlights(terminal);
                     break;
-                case "6":  
+                case "6":
                     ModifyFlightDetails(terminal);
                     break;
                 case "7":
@@ -75,7 +76,7 @@ class Program
                     ProcessUnassignedFlights(terminal);
                     break;
                 case "9":
-                    //DisplayTotalFeePerAirline(terminal);
+                    DisplayTotalFeePerAirline(terminal);
                     break;
                 default:
                     Console.WriteLine("Invalid option.");
@@ -154,20 +155,21 @@ class Program
             }
         }
 
+        // ✅ Feature 3 (Option 1): List all flights with their basic information
         void ListAllFlights(Terminal terminal)
         {
             Console.WriteLine("=============================================");
             Console.WriteLine("List of Flights for Changi Airport Terminal 5");
             Console.WriteLine("=============================================");
-            Console.WriteLine($"{"Flight Number", -15}{"Airline Name", -22}{"Origin", -22}{"Destination", -22}Expected Departure/Arrival Time");
+            Console.WriteLine($"{"Flight Number",-15}{"Airline Name",-22}{"Origin",-22}{"Destination",-22}Expected Departure/Arrival Time");
             foreach (Flight flight in terminal.Flights.Values)
             {
                 Console.WriteLine($"{flight.FlightNumber,-15}{terminal.GetAirlineFromFlight(flight).Name,-22}{flight.Origin,-22}{flight.Destination,-22}{flight.ExpectedTime.ToString("dd/M/yyyy hh:mm tt")}");
             }
         }
 
-        // ✅ Feature 3: Assign a Boarding Gate to a Flight (Matches Sample Output)
-        static void AssignBoardingGate(Terminal terminal)
+        // ✅ Feature 5: Assign a Boarding Gate to a Flight (Matches Sample Output)
+        void AssignBoardingGate(Terminal terminal)
         {
             Console.WriteLine("=============================================");
             Console.WriteLine("Assign a Boarding Gate to a Flight");
@@ -297,21 +299,56 @@ class Program
             Console.WriteLine("\n=============================================\n");
         }
 
-
-
-
+        //✅ Feature 6 (Option 4): Create a new flight
         void CreateNewFlight(Terminal terminal)
         {
             bool run = true;
             bool run2 = true;
+            bool run3 = true;
             while (run)
             {
-                Console.Write("Enter Flight Number: ");
-                string? flightNum = Console.ReadLine();
-                Console.Write("Enter Origin: ");
-                string? origin = Console.ReadLine();
-                Console.Write("Enter Destination: ");
-                string? destination = Console.ReadLine();
+                string? flightNum;
+                while (true)
+                {
+                    try
+                    {
+                        Console.Write("Enter Flight Number: ");
+                        flightNum = Console.ReadLine()?.ToUpper();
+                        break;
+                    }
+                    catch (FormatException)
+                    {
+                        Console.WriteLine("Invalid input. Please try again.");
+                    }
+                }
+                string? origin;
+                while (true)
+                {
+                    try
+                    {
+                        Console.Write("Enter Origin: ");
+                        origin = Console.ReadLine();
+                        break;
+                    }
+                    catch (FormatException)
+                    {
+                        Console.WriteLine("Invalid input. Please try again.");
+                    }
+                }
+                string? destination;
+                while (true)
+                {
+                    try
+                    {
+                        Console.Write("Enter Destination: ");
+                        destination = Console.ReadLine();
+                        break;
+                    }
+                    catch (FormatException)
+                    {
+                        Console.WriteLine("Invalid input. Please try again.");
+                    }
+                }
                 DateTime expectedTime;
                 while (true)
                 {
@@ -321,7 +358,7 @@ class Program
                         expectedTime = Convert.ToDateTime(Console.ReadLine());
                         break;
                     }
-                    catch (FormatException ex) 
+                    catch (FormatException ex)
                     {
                         Console.WriteLine(ex.Message);
                     }
@@ -398,23 +435,34 @@ class Program
             Console.WriteLine("Flight(s) have been successfully added.");
         }
 
+        //✅ Feature 9 (Option 7): Display scheduled flights in chronological order
         void DisplayFlightSchedule(Terminal terminal)
         {
             Console.WriteLine("=============================================");
             Console.WriteLine("Flight Schedule for Changi Airport Terminal 5");
             Console.WriteLine("=============================================");
             List<Flight> flights = new List<Flight>();
-            Console.WriteLine($"{"Flight Number",-15}{"Airline Name",-22}{"Origin",-22}{"Destination",-22}{"Expected Departure/Arrival Time", -35}{"Status", -15}Boarding Gate");
+            Console.WriteLine($"{"Flight Number",-15}{"Airline Name",-22}{"Origin",-22}{"Destination",-22}{"Expected Departure/Arrival Time",-35}{"Status",-15}Boarding Gate");
             foreach (Flight flight in terminal.Flights.Values)
             {
                 flights.Add(terminal.Flights[flight.FlightNumber]);
-                flights.Sort();
-         
-                Console.WriteLine($"{flight.FlightNumber,-15}{terminal.GetAirlineFromFlight(flight).Name,-22}{flight.Origin,-22}{flight.Destination,-22}{flight.ExpectedTime.ToString("dd/M/yyyy hh:mm tt"),-35}{flight.Status,-15}");
+            }
+            flights.Sort();
+            foreach (Flight flight in terminal.Flights.Values)
+            {
+                BoardingGate boardingGate = null;
+                foreach (BoardingGate boardinggate in terminal.BoardingGates.Values)
+                {
+                    if (boardinggate.AssignedFlight == flight)
+                    {
+                        boardingGate = boardinggate;
+                    }
+                }
+                Console.WriteLine($"{flight.FlightNumber,-15}{terminal.GetAirlineFromFlight(flight).Name,-22}{flight.Origin,-22}{flight.Destination,-22}{flight.ExpectedTime.ToString("dd/M/yyyy hh:mm tt"),-35}{flight.Status,-15}{boardingGate.GateName}");
             }
         }
         // ✅ Feature 7 (Option 5): Display Flight Schedule per Airline (Sorted by Flight Number)
-        static void DisplayAirlineFlights(Terminal terminal)
+        void DisplayAirlineFlights(Terminal terminal)
         {
             Console.WriteLine("=============================================");
             Console.WriteLine("List of Airlines for Changi Airport Terminal 5");
@@ -490,7 +538,7 @@ class Program
 
 
         // ✅ Feature 8 (Option 6): Modify Flight Details (Matches Sample Output)
-        static void ModifyFlightDetails(Terminal terminal)
+        void ModifyFlightDetails(Terminal terminal)
         {
             Console.WriteLine("=============================================");
             Console.WriteLine("List of Airlines for Changi Airport Terminal 5");
@@ -689,7 +737,7 @@ class Program
 
 
         // ✅ Advanced Feature (a): Process Unassigned Flights in Bulk
-        static void ProcessUnassignedFlights(Terminal terminal)
+        void ProcessUnassignedFlights(Terminal terminal)
         {
             Console.WriteLine("\n=============================================");
             Console.WriteLine("Processing Unassigned Flights to Boarding Gates");
@@ -775,6 +823,96 @@ class Program
             Console.WriteLine("=============================================");
         }
 
-    }
+        // ✅ Advanced Feature (b): Compute Total Fee Per Airline for the Day
+        void DisplayTotalFeePerAirline(Terminal terminal)
+        {
+            Console.WriteLine("\n=============================================");
+            Console.WriteLine("Total Fees Per Airline for the Day");
+            Console.WriteLine("=============================================");
 
+            // ✅ Step 1: Check if all flights have assigned boarding gates
+            List<Flight> unassignedFlights = terminal.Flights.Values.Where(f => !terminal.BoardingGates.Values.Any(g => g.AssignedFlight == f)).ToList();
+
+            if (unassignedFlights.Count > 0)
+            {
+                Console.WriteLine("Warning: Some flights do not have assigned boarding gates.");
+                Console.WriteLine("Please ensure all flights are assigned a gate before running this feature again.");
+                return;
+            }
+
+            double totalAirlineFees = 0;
+            double totalDiscounts = 0;
+            Dictionary<string, double> airlineFees = new Dictionary<string, double>();
+            Dictionary<string, double> airlineDiscounts = new Dictionary<string, double>();
+            Console.WriteLine($"{"Airline Name",-20}{"Original subtotal",-20}{"Subtotal of discounts"}");
+            // ✅ Step 2: Calculate fees per airline
+            foreach (var airline in terminal.Airlines.Values)
+            {
+                double airlineTotalFee = 0;
+                double airlineDiscount = 0;
+
+                List<Flight> airlineFlights = terminal.Flights.Values.Where(f => terminal.GetAirlineFromFlight(f) == airline).ToList();
+                double totalFlights = airlineFlights.Count;
+
+                // ✅ Step 3: Calculate fees per flight
+                foreach (var flight in airlineFlights)
+                {
+                    double flightFee = 0;
+
+                    // ✅ Apply Singapore-related fees and special request fees
+                    flightFee += flight.CalculateFees();
+
+                    // ✅ Apply boarding gate base fee
+                    flightFee += 300;
+
+                    airlineTotalFee += flightFee;
+                }
+
+                // ✅ Apply promotional discounts 
+                airlineDiscount += Math.Floor(totalFlights / 3) * 350;
+                foreach (var flight in airlineFlights)
+                {
+                    if (flight.ExpectedTime.Hour < 11 && flight.ExpectedTime.Hour > 21)
+                    {
+                        airlineDiscount += 110;
+                    }
+                    if (flight.Origin == "Dubai (DXB)")
+                    {
+                        airlineDiscount += 25;
+                    }
+                    if (flight.Origin == "Bangkok (BKK)")
+                    {
+                        airlineDiscount += 25;
+                    }
+                    if (flight.Origin == "Tokyo (NRT)")
+                    {
+                        airlineDiscount += 25;
+                    }
+
+                    if (flight is NORMFlight)
+                    {
+                        airlineDiscount += 50;
+                    }
+
+                    if (airlineFlights.Count > 5)
+                    {
+                        airlineDiscount = airlineTotalFee * 0.03;
+                    }
+                }
+
+
+                // ✅ Store calculations for final report
+                airlineFees[airline.Code] = airlineTotalFee;
+                airlineDiscounts[airline.Code] = airlineDiscount;
+                totalAirlineFees += airlineTotalFee;
+                totalDiscounts += airlineDiscount;
+
+                Console.WriteLine($"{airline.Name,-20}${airlineTotalFee,-20}${airlineDiscount}");
+            }
+            Console.WriteLine($"\n{"Total Subtotal",-20}{"Total Discounts",-20}{"Final Total Fees",-20}{"Discount Percentage"}");
+            double finalTotalFees = totalAirlineFees - totalDiscounts;
+            double discountPercentage = (totalDiscounts / totalAirlineFees) * 100;
+            Console.WriteLine($"${totalAirlineFees,-19}${totalDiscounts,-19}${finalTotalFees,-19}{discountPercentage}%");
+        }
+    }
 }

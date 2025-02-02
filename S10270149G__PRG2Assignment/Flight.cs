@@ -32,6 +32,20 @@ public class Flight : IComparable<Flight>
         Status = status;
     }
 
+    public double CalculateFees()
+    {
+        double baseFee = 300;
+        if (Destination == "Singapore (SIN)")
+        {
+            baseFee += 500;
+        }
+        else if (Origin == "Singapore (SIN)")
+        {
+            baseFee += 800;
+        }
+        return baseFee;
+    }
+
     // CompareTo method implementation
     public int CompareTo(Flight? other)
     {
