@@ -49,13 +49,13 @@ public class Flight : IComparable<Flight>
     // CompareTo method implementation
     public int CompareTo(Flight? other)
     {
-        if (other == null) return 1;
-        return ExpectedTime.CompareTo(other.ExpectedTime);
+        if (other == null) return 1; // Check for null other flight
+        return ExpectedTime.CompareTo(other.ExpectedTime); // Compare expected times
     }
 
     // Converts flight information into a readable string.
     public override string ToString()
     {
-        return $"Flight: {FlightNumber}, Origin: {Origin}, Destination: {Destination}, Expected Time: {ExpectedTime}, Status: {Status}";
+        return $"Flight: {FlightNumber}, Origin: {Origin}, Destination: {Destination}, Expected Time: {ExpectedTime}, Status: {Status}";// Return formatted string with flight details
     }
 }

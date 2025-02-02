@@ -24,10 +24,10 @@ public class BoardingGate
     // Constructor to initialize boarding gate properties
     public BoardingGate(string gateName, bool supportsCFFT, bool supportsDDJB, bool supportsLWTT)
     {
-        GateName = gateName;
-        SupportsCFFT = supportsCFFT;
-        SupportsDDJB = supportsDDJB;
-        SupportsLWTT = supportsLWTT;
+        GateName = gateName; // Initialize gate name
+        SupportsCFFT = supportsCFFT; // Initialize supportsCFFT
+        SupportsDDJB = supportsDDJB; // Initialize supportsDDJB
+        SupportsLWTT = supportsLWTT; // Initialize supportsLWTT
         AssignedFlight = null;  // Initially no flight assigned
     }
 
@@ -35,16 +35,16 @@ public class BoardingGate
     public double CalculateFees()
     {
         double baseFee = 300;  // Base fee for gate usage
-        if (AssignedFlight is DDJBFlight) baseFee += 300;
-        if (AssignedFlight is CFFTFlight) baseFee += 150;
-        if (AssignedFlight is LWTTFlight) baseFee += 500;
-        return baseFee;
+        if (AssignedFlight is DDJBFlight) baseFee += 300; // Add fee for DDJB flight
+        if (AssignedFlight is CFFTFlight) baseFee += 150; // Add fee for CFFT flight
+        if (AssignedFlight is LWTTFlight) baseFee += 500; // Add fee for LWTT flight
+        return baseFee; // Return calculated fee
     }
 
     // Returns gate details as a formatted string
     public override string ToString()
     {
-        string assignedFlightInfo = AssignedFlight != null ? AssignedFlight.FlightNumber : "None";
-        return $"Gate: {GateName}, Assigned Flight: {assignedFlightInfo}";
+        string assignedFlightInfo = AssignedFlight != null ? AssignedFlight.FlightNumber : "None"; // Check if flight is assigned
+        return $"Gate: {GateName}, Assigned Flight: {assignedFlightInfo}"; // Return formatted string with gate details
     }
 }
