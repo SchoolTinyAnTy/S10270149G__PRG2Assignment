@@ -610,6 +610,7 @@ class Program
             }
 
             Flight selectedFlight = terminal.Flights[flightNum];
+            BoardingGate selectedgate;
 
             // Step 11: Ask if the user wants to modify or delete the flight
             Console.WriteLine("\n1. Modify Flight");
@@ -620,6 +621,11 @@ class Program
             if (choice == "2")
             {
                 terminal.Flights.Remove(flightNum);
+                BoardingGate assignedGate = terminal.BoardingGates.Values.FirstOrDefault(g => g.AssignedFlight == selectedFlight);
+                if (assignedGate != null)
+                {
+                    assignedGate.AssignedFlight = null;
+                }
                 Console.WriteLine($"Flight {flightNum} has been successfully deleted.");
                 return;
             }
@@ -896,7 +902,7 @@ class Program
 
                     if (airlineFlights.Count > 5)
                     {
-                        airlineDiscount = airlineTotalFee * 0.03; // Discount for airlines with more than 5 flights
+                        airlineDiscount += airlineTotalFee * 0.03; // Discount for airlines with more than 5 flights
                     }
                 }
 
